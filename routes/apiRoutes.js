@@ -1,8 +1,9 @@
 const router = require("express").Router();
 const db = require("../models/");
 
-router.get("/api/workouts", (req, res) => {
-  db.Workout.aggregate([
+router.get("/api/workouts", async (req, res) => {
+  try {
+    const lastWorkout = await db.Workout.aggregate([
     { $sort: 
       { 
         day: 1 
@@ -15,29 +16,39 @@ router.get("/api/workouts", (req, res) => {
         }
       }
     }
-  ]).then(dbExercise => {
-    res.send(dbExercise);
-  })
-  .catch(err => {
-    res.status(500).json(err);
-  });
+  ]) 
+  res.status(200).send(lastWorkout);
+  } catch (err) {
+  res.status(500).json(err);
+  }   
 });
+
+// .then(dbExercise => {
+//   res.send(dbExercise);
+// })
+// .catch(err => {
+//   res.status(500).json(err);
+// });
+
+
+
+
 
 
 //Doubleback to see if this route works
-router.put("/api/workouts/:id", (req, res) => {
-  db.Workout.updateOne({_id: req.params.id},
+router.put("/api/workouts/:id",  async (req, res) => {
+   try {
+     const updatedWorkout = await db.Workout.updateOne({_id: req.params.id},
     {
       $push: {
         exercises: req.body
       }
     }
-  ).then(updatedWorkout => {
-    res.send(updatedWorkout);
-  })
-  .catch(err => {
-    res.status(500).json(err);
-  });
+  )
+  res.status(200).send(updatedWorkout);
+  } catch (err) {
+    res.status(500).json(err)
+  }
 });
 
 router.post("/api/workouts", async (req, res) => {
