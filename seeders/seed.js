@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 const db = require('../models');
-
+require("dotenv").config()
+console.log(process.env.MONGODB_URI)
 mongoose.connect(
   process.env.MONGODB_URI || 'mongodb://localhost/Workout', 
   {
@@ -10,6 +11,8 @@ mongoose.connect(
   useFindAndModify: false
 }
 );
+
+console.log(mongoose.connection.readyState)
 
 const workoutSeed = [
   {
