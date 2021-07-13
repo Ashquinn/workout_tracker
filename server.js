@@ -11,11 +11,15 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-mongoose.connect('mongodb://localhost/Workout', {
+mongoose.connect(
+    process.env.MONGODB_URI || 'mongodb://localhost/Workout', 
+    {
     useNewUrlParser: true,
-    useFindAndModify: false,
-    useUnifiedTopology: true
-  });
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+  }
+);
 
   require('./routes/htmlRoutes.js')(app);
   app.use(require('./routes/apiRoutes.js'));
